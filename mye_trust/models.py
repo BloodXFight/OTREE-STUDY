@@ -17,7 +17,7 @@ doc = """
 class Constants(BaseConstants):
     name_in_url = 'mye_trust'
     players_per_group = 2
-    num_rounds = 1
+    num_rounds = 3
     
     instructions_template = 'mye_trust/Instructions.html'
     
@@ -25,20 +25,24 @@ class Constants(BaseConstants):
     amount_allocated = c(10)
     multiplication_factor = 3
 
+    def before_session_starts(self):
+        self.group_randomly(fixed_id_in_group=True)
 
 class Subsession(BaseSubsession):
-    pass
-
+    def before_session_starts(self):
+        self.group_randomly(fixed_id_in_group=True)
+    
+    def set_payoffs(self):
+        p1.cumulative_payoff = sum([p1.payoff for p in self.player.in_all_rounds(1)])
+        p2.cumulative_payoff = sum([p2.payoff for p in self.player.in_all_rounds(2)])
 
 class Group(BaseGroup):
     sent_amount = models.CurrencyField(
-        min=0, max=Constants.amount_allocated,
-        doc="""Amount sent by P1""",
+        choices=currency_range(c(0), c(10), c(10))
     )
         
     sent_back_amount = models.CurrencyField(
-        doc="""Amount sent back by P2""",
-        min=c(0),
+        choices=currency_range(c(0), c(15), c(15))
     )
 
     def set_payoffs(self):
@@ -47,8 +51,6 @@ class Group(BaseGroup):
         p1.payoff = Constants.amount_allocated - self.sent_amount + self.sent_back_amount
         p2.payoff = self.sent_amount * Constants.multiplication_factor - self.sent_back_amount
 
-
 class Player(BasePlayer):
-    
     def role(self):
         return {1: 'A', 2: 'B'}[self.id_in_group]

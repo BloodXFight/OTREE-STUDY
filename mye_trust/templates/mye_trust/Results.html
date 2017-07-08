@@ -10,21 +10,18 @@ Results
 {% if player.id_in_group == 1 %}
     <p>
         You sent Participant B {{ group.sent_amount }}.
-        Participant B returned {{group.sent_back_amount}}.
     </p>
 {% else %}
     <p>
-        Participant A sent you {{ group.sent_amount }}.
         You returned {{group.sent_back_amount}}.
     </p>
 
 {% endif %}
 
-    <p>
-    Therefore, your total payoff is {{ player.payoff }}.
-    </p>
+   <p>{% next_button %}</p>
 
-    {% include 'my_trust/Instructions.html' %}
+
+    {% include 'mye_trust/Instructions.html' %}
 
 {% endblock %}
 
