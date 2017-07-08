@@ -7,7 +7,7 @@ until /usr/bin/env python pg_ping.py 2>&1 >/dev/null; do
 done
 
 if [ ! -f "/opt/init/.done" ]; then
-    /usr/bin/env python -u /usr/local/bin/otree resetdb --noinput -v 1 \
+    /usr/bin/env python -u /usr/local/bin/oTree1 resetdb --noinput -v 1 \
     && touch /opt/init/.done
 fi
 
